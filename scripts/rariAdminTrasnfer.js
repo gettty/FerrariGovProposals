@@ -33,7 +33,7 @@ const TimelockAbi = require("../abis/RariTimelock.json");
     let currentProposalCount = await goveranceContract.proposalCount(); //expect 7
     console.log("current number of proposals created: "+currentProposalCount);
     let currentTimelockAdmin = await timelockContract.pendingAdmin();
-    console.log(currentTimelockAdmin);
+    console.log(currentTimelockAdmin); //expect 0x91d9c2b5cf81d55a5f2ecc0fc84e62f9cd2cefd6 aka Rari Gov Bravo
 
     await goveranceContract.propose(["0x8ace03fc45139fddba944c6a4082b604041d19fc"],[0],["setPendingAdmin(address)"],["0x0000000000000000000000000bef27feb58e857046d630b2c03dfb7bae567494"],"hello");
     currentProposalCount = await goveranceContract.proposalCount();
