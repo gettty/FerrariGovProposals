@@ -45,7 +45,7 @@ let accountToInpersonate = "0xe0ac4559739bd36f0913fb0a3f5bfc19bcbacd52";
     //mint more tribe
     //set thing as a minter
     //console.log(proposeEvents[proposeEvents.length-1])
-    let proposal = await governanceContract['propose(address[],uint256[],string[],bytes[],string)'](["0x8d5ED43dCa8C2F7dFB20CF7b53CC7E593635d7b9"],[0],["allocateTribe(address,uint256)"],["0x0000000000000000000000009b68c14e936104e9a7a24c712beecdc220002984000000000000000000000000000000000000000000eee25a008530a464ed33d9"],"hello");
+    let proposal = await governanceContract['propose(address[],uint256[],bytes[],string)'](["0x8d5ED43dCa8C2F7dFB20CF7b53CC7E593635d7b9"],[0],["0xeacdd9e80000000000000000000000009b68c14e936104e9a7a24c712beecdc220002984000000000000000000000000000000000000000000eee25a008530a464ed33d9"],"hello");
     await hre.network.provider.request({
       method: "evm_increaseTime",
       params: [1],
@@ -53,6 +53,7 @@ let accountToInpersonate = "0xe0ac4559739bd36f0913fb0a3f5bfc19bcbacd52";
     await advanceBlockHeight(1); // fast forward through review period
     let proposeEvents = await governanceContract.queryFilter("0x7d84a6263ae0d98d3329bd7b46bb4e8d6f98cd35a7adb45c274c8b7fd5ebd5e0");
     let proposalNumber = proposeEvents[[proposeEvents.length-1]]["args"]["proposalId"];
+    console.log("state: "+await governanceContract.state(proposalNumber))
     const prep = await governanceContract.populateTransaction["castVote"](
       proposalNumber.toString(),
       "1"
@@ -94,13 +95,9 @@ let accountToInpersonate = "0xe0ac4559739bd36f0913fb0a3f5bfc19bcbacd52";
     });
     await advanceBlockHeight(13000); // fast forward through voting period
 
-    console.log("help")
-
     await governanceContract['queue(uint256)'](proposalNumber);
+    console.log("state: "+await governanceContract.state(proposalNumber))
     
-    proposalInfo = await governanceContract.proposals(proposalNumber);
-    console.log(proposalInfo);
-
     await hre.network.provider.request({
         method: "evm_increaseTime",
         params: [86400],
@@ -108,7 +105,11 @@ let accountToInpersonate = "0xe0ac4559739bd36f0913fb0a3f5bfc19bcbacd52";
 
     await advanceBlockHeight(1) //after changing the time mine one block
 
-    await governanceContract['execute(uint256)'](proposalNumber);
+    let execution = await governanceContract['execute(uint256)'](proposalNumber);
+    //console.log(execution);
+    console.log("state: "+await governanceContract.state(proposalNumber))
+    //console.log(await governanceContract.proposals(proposalNumber));
+
 
     balanceOfCore = await TribeToken.balanceOf("0x8d5ED43dCa8C2F7dFB20CF7b53CC7E593635d7b9");
     console.log("core:"+balanceOfCore);
