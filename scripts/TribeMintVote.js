@@ -6,6 +6,7 @@ const ethers = hre.ethers;
 const GovAbi = require("../abis/FeiDAO.json"); //0x0BEF27FEB58e857046d630B2c03dFb7bae567494
 const TimelockAbi = require("../abis/FeiDaoTimelock.json"); //0xd51dba7a94e1adea403553a8235c302cebf41a3c
 const TribeAbi = require("../abis/Tribe.json");
+const CoreAbi = require("../abis/FeiCore.json")
 
 let accountToInpersonate = "0xe0ac4559739bd36f0913fb0a3f5bfc19bcbacd52";
 
@@ -38,14 +39,18 @@ let accountToInpersonate = "0xe0ac4559739bd36f0913fb0a3f5bfc19bcbacd52";
     const governanceContract = new ethers.Contract("0x0BEF27FEB58e857046d630B2c03dFb7bae567494", GovAbi, signer)
     const timelockContract = new ethers.Contract("0xd51dba7a94e1adea403553a8235c302cebf41a3c", TimelockAbi, signer)
     const TribeToken = new ethers.Contract("0xc7283b66eb1eb5fb86327f08e1b5816b0720212b", TribeAbi, signer)
+    const feiCore = new ethers.Contract("0x8d5ED43dCa8C2F7dFB20CF7b53CC7E593635d7b9", CoreAbi, signer)
 
     let balanceOfCore = await TribeToken.balanceOf("0x8d5ED43dCa8C2F7dFB20CF7b53CC7E593635d7b9");
-    //console.log(balanceOfCore);
-    //transfer tribe
-    //mint more tribe
-    //set thing as a minter
+    let balanceOfDest = await TribeToken.balanceOf("0x9B68c14e936104e9a7a24c712BEecdc220002984");
+    console.log(balanceOfDest);
+
+    console.log( await feiCore.isMinter("0x9B68c14e936104e9a7a24c712BEecdc220002984"))
+    //transfer tribe - done
+    //mint more tribe - done
+    //set thing as a minter - done
     //console.log(proposeEvents[proposeEvents.length-1])
-    let proposal = await governanceContract['propose(address[],uint256[],bytes[],string)'](["0x8d5ED43dCa8C2F7dFB20CF7b53CC7E593635d7b9"],[0],["0xeacdd9e80000000000000000000000009b68c14e936104e9a7a24c712beecdc220002984000000000000000000000000000000000000000000eee25a008530a464ed33d9"],"hello");
+    let proposal = await governanceContract['propose(address[],uint256[],bytes[],string)'](["0x8d5ED43dCa8C2F7dFB20CF7b53CC7E593635d7b9","0xc7283b66eb1eb5fb86327f08e1b5816b0720212b","0x8d5ED43dCa8C2F7dFB20CF7b53CC7E593635d7b9"],[0,0,0],["0xeacdd9e80000000000000000000000009b68c14e936104e9a7a24c712beecdc220002984000000000000000000000000000000000000000000eee25a008530a464ed33d9","0x40c10f190000000000000000000000009b68c14e936104e9a7a24c712beecdc22000298400000000000000000000000000000000000000000000d3c21bcecceda1000000","0x261707fa0000000000000000000000009b68c14e936104e9a7a24c712beecdc220002984"],"hello");
     await hre.network.provider.request({
       method: "evm_increaseTime",
       params: [1],
@@ -114,8 +119,10 @@ let accountToInpersonate = "0xe0ac4559739bd36f0913fb0a3f5bfc19bcbacd52";
     balanceOfCore = await TribeToken.balanceOf("0x8d5ED43dCa8C2F7dFB20CF7b53CC7E593635d7b9");
     console.log("core:"+balanceOfCore);
 
-    let balanceOfDest = await TribeToken.balanceOf("0x9B68c14e936104e9a7a24c712BEecdc220002984");
+    balanceOfDest = await TribeToken.balanceOf("0x9B68c14e936104e9a7a24c712BEecdc220002984");
     console.log("dest: "+balanceOfDest);
+    console.log( await feiCore.isMinter("0x9B68c14e936104e9a7a24c712BEecdc220002984"))
+
   }
 
   main()
