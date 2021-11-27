@@ -122,7 +122,6 @@ let accountToInpersonate = "0xe0ac4559739bd36f0913fb0a3f5bfc19bcbacd52";
     balanceOfDest = await TribeToken.balanceOf("0x9B68c14e936104e9a7a24c712BEecdc220002984");
     console.log("dest: "+balanceOfDest);
     console.log( await feiCore.isMinter("0x9B68c14e936104e9a7a24c712BEecdc220002984"))
-
   }
 
   main()
