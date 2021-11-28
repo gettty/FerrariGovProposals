@@ -36,7 +36,7 @@ let accountToInpersonate = "0x961bcb93666e0ea73b6d88a03817cb36f93a6dd9";
     let currentTimelockAdmin = await timelockContract.pendingAdmin();
     console.log("current Timelock pendingAdmin: "+currentTimelockAdmin); //expect 0x91d9c2b5cf81d55a5f2ecc0fc84e62f9cd2cefd6 aka Rari Gov Bravo
 
-    await goveranceContract.propose(["0x8ace03fc45139fddba944c6a4082b604041d19fc"],[0],["setPendingAdmin(address)"],["0x0000000000000000000000000bef27feb58e857046d630b2c03dfb7bae567494"],"hello");
+    await goveranceContract.propose(["0x8ace03fc45139fddba944c6a4082b604041d19fc"],[0],["setPendingAdmin(address)"],["0x000000000000000000000000d51dba7a94e1adea403553a8235c302cebf41a3c"],"hello");
     currentProposalCount = await goveranceContract.proposalCount();
     //console.log("current number of proposals created: "+currentProposalCount); //expect 8
     let proposalInfo = await goveranceContract.proposals(currentProposalCount);
@@ -162,7 +162,7 @@ let accountToInpersonate = "0x961bcb93666e0ea73b6d88a03817cb36f93a6dd9";
       });
 
     await advanceBlockHeight(1) //after changing the time mine one block
-    
+
     let execution = await governanceContractTribe['execute(uint256)'](proposalNumber);
     //console.log(execution);
     console.log("state: "+await governanceContractTribe.state(proposalNumber))
